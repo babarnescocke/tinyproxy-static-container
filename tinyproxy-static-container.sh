@@ -13,8 +13,8 @@ buildah run "$build0" sh -c 'apk add -q --no-cache automake linux-headers alpine
 
 # Function to configure, build, and install Tinyproxy
 build_and_install() {
-  buildah run "$build0" sh -c "cd /tmp/tinyproxy; \
-    ./autogen.sh; \
+  buildah run "$build0" sh -c "cd /tmp/tinyproxy/; \
+   ./autogen.sh; \
     LDFLAGS='-static' ./configure; \
     make; \
     make install; \
@@ -23,12 +23,11 @@ build_and_install() {
 
 if [ "$#" -eq 0 ] || [ "${1^^}" != "GIT" ]; then
   # Download and build from the latest release tarball
-  REPO="tinyproxy/tinyproxy"
-  LATEST_RELEASE=$(curl -sL "https://api.github.com/repos/$REPO/releases/latest")
-  TARBALL_URL=$(echo $LATEST_RELEASE | jq -r '.assets[] | select(.name | endswith(".tar.gz")) | .browser_download_url' )
-  buildah run "$build0" sh -c "curl -L $TARBALL_URL | tar zx -C /tmp; \
-    DIR_NAME=$(ls /tmp | grep -m 1 tinyproxy); \
-    cd /tmp/\$DIR_NAME"
+  buildah run "$build0" sh -c '  REPO="tinyproxy/tinyproxy"; \
+  LATEST_RELEASE=$(curl -sL "https://api.github.com/repos/$REPO/releases/latest"); \
+  TARBALL_URL=$(echo $LATEST_RELEASE | jq -r '.assets[].browser_download_url' | grep tar.gz); \curl -L $TARBALL_URL | tar -xz -C /tmp; \
+  subdir=$(find /tmp/ -mindepth 1 -maxdepth 1 -type d); \
+   mv $subdir /tmp/tinyproxy'
   build_and_install
   IMAGE_TAG="tinyproxy-scratch-container:latest"
 else
