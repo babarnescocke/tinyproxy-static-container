@@ -1,0 +1,62 @@
+# Tinyproxy Configuration File
+
+# The user and group that Tinyproxy will run as after binding the port
+User nobody
+Group nogroup
+
+# The port Tinyproxy will listen on
+Port 8888
+
+# The address Tinyproxy will listen on (default: all interfaces)
+# Uncomment and specify if needed
+# Listen 127.0.0.1
+
+# Timeout for inactive connections (in seconds)
+Timeout 600
+
+# Default error file
+DefaultErrorFile "/config/error.html"
+
+# Log settings
+LogFile "/config/tinyproxy.log"
+LogLevel Info
+# Uncomment the following line to enable syslog logging
+# Syslog On
+
+# Upstream proxy (if required)
+# Uncomment and configure if using an upstream proxy
+# Upstream http proxy.example.com:8080
+
+# Access control: allow only localhost by default
+Allow 127.0.0.1
+Deny 0.0.0.0/0
+
+# Basic Authentication
+# Uncomment to require username/password for proxy access
+# BasicAuth myuser mypassword
+# BasicAuthRealm "Tinyproxy"
+
+# Anonymous mode: restrict headers passed to the server
+# Uncomment and add headers if needed
+# Anonymous "Host"
+# Anonymous "Authorization"
+
+# Enable filtering (blacklist mode)
+# Uncomment to configure filtering
+# Filter "/config/filter.rules"
+# FilterType fnmatch
+# FilterDefaultDeny No
+
+# Reverse proxy configuration
+# Uncomment and configure if using as a reverse proxy
+# ReversePath "/example/" "http://www.example.com/"
+# ReverseOnly Yes
+
+# Disable the Via header (stealth mode)
+DisableViaHeader Yes
+
+# Connection settings
+MaxClients 100
+ConnectPort 80
+ConnectPort 443
+
