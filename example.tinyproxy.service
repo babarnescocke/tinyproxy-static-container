@@ -1,0 +1,18 @@
+[Unit]
+Description=Tinyproxy in a container
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Nice=-3
+User=tinyproxy
+Group=tinyproxy
+WorkingDirectory=/foo/bar/tinyproxy
+ExecStart=podman run --rm --pids-limit=0 --log-driver=journald --tz=local --name=tinyproxy -p 8888:8888/tcp -v /foo/bar/tinyproxy/config.txt:/config.txt:Z tinyproxy-static-container
+ExecStop=podman stop tinyproxy
+StandardOutput=journal
+Restart=on-failure
+RestartSec=9s
+
+[Install]
+WantedBy=multi-user.target

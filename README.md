@@ -23,7 +23,7 @@ buildah bud -t tinyproxy-static-container .
 You can then run the image:
 
 ```bash
-podman run --rm -v $(pwd)/config.txt:/config.txt -p 8888:8888/udp tinyproxy-static-container
+podman run --rm -v $(pwd)/config.txt:/config.txt -p 8888:8888/tcp tinyproxy-static-container
 ```
 
 Ensure you have a valid `config.txt` file in your working directory for Tinyproxy's configuration.
@@ -55,7 +55,7 @@ For those using Buildah to build the container, the process differs slightly, es
 
 4. **Run the container**:
    ```bash
-   podman run --rm -v $(pwd)/config.txt:/config.txt -p 8888:8888/udp tinyproxy-static-container
+   podman run --rm -v $(pwd)/config.txt:/config.txt -p 8888:8888/tcp tinyproxy-static-container
    ```
 
 ## Upstream Project

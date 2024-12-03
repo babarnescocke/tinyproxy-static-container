@@ -35,6 +35,9 @@ build_and_install() {
     CPPFLAGS='-O2 -D_FORTIFY_SOURCE=2 -fstack-protector-strong -fPIE' \
     LDFLAGS='-static -Wl,-z,relro,-z,now' \
     ./configure; \
+    CFLAGS='-O2 -D_FORTIFY_SOURCE=2 -fstack-protector-strong -fPIE' \
+    CPPFLAGS='-O2 -D_FORTIFY_SOURCE=2 -fstack-protector-strong -fPIE' \
+    LDFLAGS='-static -Wl,-z,relro,-z,now' \
     make; \
     make install; \
     strip /usr/local/bin/tinyproxy"
@@ -70,6 +73,7 @@ fi
 # Copy the binary to the scratch image and unmount
 echo "Copying Tinyproxy binary to scratch container..."
 cp $build0mnt/usr/local/bin/tinyproxy $build1mnt/tinyproxy
+ls -alhtrc $build1mnt/tinyproxy
 echo "Tinyproxy binary copied successfully."
 
 # Unmount build containers
@@ -79,8 +83,8 @@ echo "Build containers unmounted."
 
 # Set the entrypoint and working directory
 echo "Configuring the scratch container with entrypoint and labels..."
-buildah config --cmd '"/tinyproxy", "-d", "-c", "/config.txt"' --workingdir /config "$build1"
-buildah config --label "maintainer=Brian Barnes-Cocke <Brian@brian.com>" "$build1"
+buildah config --cmd '["/tinyproxy", "-d", "-c", "/config.txt"]' --workingdir /config "$build1"
+buildah config --author "Brian Barnes-Cocke <brian@brian.com>" "$build1"
 buildah config --label "org.opencontainers.image.title=Tinyproxy Scratch Container" "$build1"
 buildah config --label "org.opencontainers.image.description=Statically compiled Tinyproxy built in scratch container" "$build1"
 buildah config --label "org.opencontainers.image.url=https://github.com/babarnescocke/tinyproxy-static-container" "$build1"
